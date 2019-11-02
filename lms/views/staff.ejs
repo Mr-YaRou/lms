@@ -1,0 +1,57 @@
+<html>
+
+<head>
+    staff
+</head>
+
+<body>
+        <H1>Staff</H1>
+
+
+        Staff name: <%= staffRes.first_name %><br/>
+        Department: <%= staffRes.name %> <br/>
+        Position: <%= staffRes.position %><br/>
+       
+        
+        <script> var i = 1; var ii = 1; </script> 
+        Access:  <% accessRes.forEach((accessRess) => { %>
+            access <script> document.write(i);
+            i++;
+            </script> : <%= accessRess.name %> 123<br/>
+            
+            <% }) %><br/>
+
+        loan status = new
+        department ID = access department ID
+        staffID = ?
+
+        view exisiting loan:
+        select * from loan where department = {select department from staff where staff_id = ?} and customer_id = cus_id;
+
+        view customer list
+        view customer profile
+
+        <br/><br/><p>Loan</p>
+        <table border="1">
+                <% if (approveLoan.length > 0) { %>
+                <tr><th>No.</th>
+                    <th>Loan Name</th>
+                    <th>Customer Name</th>
+                    <th>loan amount</th>
+                    <th></th>
+                </tr>
+                <% approveLoan.forEach((loan) => { %>
+                <tr><td><script> document.write(ii); ii++;</script></td>
+                    <td><%= loan.name %></td>
+                    <td><%= loan.first_name %></td>
+                    <td><%= loan.loan_amount %></td> 
+                    <td><form action = "/staff/update/<%= loan.loan_id %>" method = post ><input type="submit" name="add me" value="display"></form></td>
+                </tr>
+                <% }) %>
+                <% } %>
+            </table>
+
+
+
+</body>
+</html>

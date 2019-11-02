@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    Edit
+</head>
+
+<body>
+        Edit <%=table %>
+        <p>
+            <form action="" method="post">
+        <% if (tableSQL.length > 0) { %>
+            <% tableSQL.forEach((customer) => { %>
+            cus_id: <input type="text" name="hi" id="hi" value = "<%= customer.cus_id %>" disabled> <%= customer.cus_id %> 123<br/>
+            first_name: <input type="text" name="first_name" id="first_name" value = "<%= customer.first_name %>"> <%= customer.first_name %> 123
+            <% }) %>
+            <br/>
+            
+        <input type="submit" name="add me" value="display">
+
+        <% } %>
+    </form>
+    </p>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

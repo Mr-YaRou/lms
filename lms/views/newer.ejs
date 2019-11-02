@@ -1,0 +1,56 @@
+<html>
+<head> <title>Demo Online Book Catalog</title> </head>
+
+<body>
+<table>
+<tr> <td colspan="2" style="background-color:#FFA500;">
+<h1> Demo Book Catalog</h1>
+</td> </tr>
+<tr>
+<td style="background-color:#eeeeee;">
+<form>
+Title: <input type="text" name="Title" id="Title">
+
+<select name="Language"> <option value="">Select Language</option> 
+
+<% languages.forEach(function(language) { %>
+	<option value="<%= language.language %>"><%= language.language %></option><br>
+    <% }); %>
+</select>
+
+<input type="radio" name="Format" id="Format1" value="hardcover">hardcover
+<input type="radio" name="Format" id="Format2" value="paperback">paperback
+
+<input type="submit" name="formSubmit" value="Search" >
+</form>
+<tr><td>Testing
+    <form method = "post"><input type="text" name="joke" id="joke"><input type="text" name="page" id="page"><input type="text" name="year" id="year"><br/></bf><input type="submit" name="special" value="display"></form>
+</td></tr>
+<b>SQL: </b><%= sql %><br /><br />
+
+<% if (books.length > 0) { %>
+    <table border="1">
+       <col width="75%">
+       <col width="25%">
+       <tr>
+           <th>Title</th>
+           <th>Authors</th>
+       </tr>
+       <% books.forEach((book) => { %>
+           <tr>
+           <td><%= book.title %></td>
+           <td><%= book.authors %></td>
+           </tr>
+       <% }) %>
+   </table>
+<% } %>  
+</td></tr>
+
+<tr>
+<td colspan="2" style="background-color:#FFA500; text-align:center;"> Copyright &#169; TIC2601
+</td> </tr>
+</table>
+
+</body>
+</html>
+

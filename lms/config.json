@@ -1,0 +1,13 @@
+{
+    "database_config": {
+        "host"     : "localhost",
+
+        "user"     : "root",
+
+        "password" : "TIC2601",
+
+        "database" : "lms"    
+
+
+    } 
+}

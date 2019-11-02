@@ -1,0 +1,206 @@
+<html>
+
+<head>
+    View
+</head>
+
+<body>
+    <%=table %><br />
+    <a href="admin/add<%=table %>">Add <%=table %></a>
+    <a href="/edit<%=table %>">Edit <%=table %></a>
+    <% if (tableSQL.length > 0) { %>
+    <table border="1">
+        <% if (table == "customer") { %>
+        <tr>
+            <th>cus_id</th>
+            <th>first_name</th>
+            <th>last_name</th>
+            <th>email</th>
+            <th>address</th>
+            <th>postal_code</th>
+            <th>handphone</th>
+            <th>date_of_birth</th>
+            <th>job_title</th>
+            <th>company</th>
+            <th>annual_salary</th>
+            <th>username</th>
+            <th>password</th>
+        </tr>
+        <% tableSQL.forEach((customer) => { %>
+        <tr>
+            <td><a href="/edit?cus_id=<%= customer.cus_id %>"><%= customer.cus_id %></a></td>
+            <td><%= customer.first_name %></td>
+            <td><%= customer.last_name %></td>
+            <td><%= customer.email %></td>
+            <td><%= customer.address %></td>
+            <td><%= customer.postal_code %></td>
+            <td><%= customer.handphone %></td>
+            <td><%= customer.date_of_birth %></td>
+            <td><%= customer.job_title %></td>
+            <td><%= customer.company %></td>
+            <td><%= customer.annual_salary %></td>
+            <td><%= customer.username %></td>
+            <td><%= customer.password %></td>
+        </tr>
+        <% }) %>
+        <% } %>
+
+        <% if (table == "staff") { %>
+        <tr>
+            <th>staff_id</th>
+            <th>first_name</th>
+            <th>last_name</th>
+            <th>email</th>
+            <th>position</th>
+            <th>department_id</th>
+            <th>username</th>
+            <th>password</th>
+        </tr>
+        <% tableSQL.forEach((staff) => { %>
+        <tr>
+            <td><a href="/edit<%=table %>?staff_id=<%= staff.staff_id %>"><%= staff.staff_id %></a></td>
+            <td><%= staff.first_name %></td>
+            <td><%= staff.last_name %></td>
+            <td><%= staff.email %></td>
+            <td><%= staff.position %></td>
+            <td><%= staff.department_id %></td>
+            <td><%= staff.username %></td>
+            <td><%= staff.password %></td>
+        </tr>
+        <% }) %>
+        <% } %>
+
+        <% if (table == "loan") { %>
+        <tr>
+            <th>loan_id</th>
+            <th>loan_type_id</th>
+            <th>account_id</th>
+            <th>loan_amount</th>
+            <th>outstanding_amount</th>
+            <th>start_date</th>
+            <th>end_date</th>
+        </tr>
+        <% tableSQL.forEach((loan) => { %>
+        <tr>
+            <td><a href="/edit<%=table %>?loan_id=<%= loan.loan_id %>"><%= loan.loan_id %></a></td>
+            <td><%= loan.loan_type_id %></td>
+            <td><%= loan.account_id %></td>
+            <td><%= loan.loan_amount %></td>
+            <td><%= loan.outstanding_amount %></td>
+            <td><%= loan.start_date %></td>
+            <td><%= loan.end_date %></td>
+        </tr>
+        <% }) %>
+        <% } %>
+
+        <% if (table == "request") { %>
+        <tr>
+            <th>request_id</th>
+            <th>status</th>
+            <th>remark</th>
+            <th>approver_id</th>
+            <th>account_id</th>
+            <th>loan_id</th>
+            <th>loan_type_id</th>
+            <th>loan_amount</th>
+            <th>date_of_application</th>
+        </tr>
+        <% tableSQL.forEach((request) => { %>
+        <tr>
+            <td><a href="/edit<%=table %>?request_id=<%= request.request_id %>"><%= request.request_id %></a></td>
+            <td><%= request.status %></td>
+            <td><%= request.remark %></td>
+            <td><%= request.account_id %></td>
+            <td><%= request.loan_id %></td>
+            <td><%= request.loan_type_id %></td>
+            <td><%= request.loan_amount %></td>
+            <td><%= request.date_of_application %></td>
+        </tr>
+        <% }) %>
+        <% } %>
+
+        <% if (table == "department") { %>
+        <tr>
+            <th>department_id</th>
+            <th>name</th>
+        </tr>
+        <% tableSQL.forEach((department) => { %>
+        <tr>
+            <td><a href="/edit<%=table %>?department_id=<%= department.department_id %>"><%= department.department_id %></a></td>
+            <td><%= department.name %></td>
+        </tr>
+        <% }) %>
+        <% } %>
+
+        <% if (table == "payment") { %>
+        <tr>
+            <th>payment_id</th>
+            <th>transaction_id</th>
+            <th>loan_id</th>
+            <th>amount</th>
+            <th>date</th>
+        </tr>
+        <% tableSQL.forEach((payment) => { %>
+        <tr>
+            <td><%= payment.payment_id %></td>
+            <td><%= payment.transaction_id %></td>
+            <td><%= payment.loan_id %></td>
+            <td><%= payment.amount %></td>
+            <td><%= payment.date %></td>
+            <td><a href="/edit<%=table %>?payment_id=<%= payment.payment_id %>">Edit</a></td>
+        </tr>
+        <% }) %>
+        <% } %>
+
+        <% if (table == "transaction_type") { %>
+        <tr>
+            <th>transaction_type_id</th>
+            <th>name</th>
+        </tr>
+        <% tableSQL.forEach((transaction_type) => { %>
+        <tr>
+            <td><%= transaction_type.transaction_type_id %></td>
+            <td><%= transaction_type.name %></td>
+            <td><a href="/edit<%=table %>?transaction_type_id=<%= transaction_type.transaction_type_id %>">Edit</a></td>
+        </tr>
+        <% }) %>
+        <% } %>
+
+        <% if (table == "access") { %>
+        <tr>
+            <th>account_id</th>
+            <th>accesstype_id</th>
+        </tr>
+        <% tableSQL.forEach((access) => { %>
+        <tr>
+            <td><%= access.account_id %></td>
+            <td><%= access.accesstype_id %></td>
+            <td><a href="/edit<%=table %>?account_id=<%= access.account_id %>&accesstype_id=<%= access.accesstype_id %>">edit</a></td>
+        </tr>
+        <% }) %>
+        <% } %>
+
+        <% if (table == "access_type") { %>
+        <tr>
+            <th>access_id</th>
+            <th>name</th>
+            <th>approval_limit</th>
+            <th>department_id</th>
+        </tr>
+        <% tableSQL.forEach((access_type) => { %>
+        <tr>
+            <td><%= access_type.access_id %></td>
+            <td><%= access_type.name %></td>
+            <td><%= access_type.approval_limit %></td>
+            <td><%= access_type.department_id %></td>
+            <td><a href="/edit<%=table %>?access_id=<%= access_type.access_id %>">Edit</a></td>
+        </tr>
+        <% }) %>
+        <% } %>
+
+    </table>
+
+    <% } %>
+</body>
+
+</html>
