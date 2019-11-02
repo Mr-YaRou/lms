@@ -14,21 +14,41 @@ Node.js is a runtime environment for javascript and npm is the package manager t
 
 For more visual guide, visit this [link](https://www.youtube.com/watch?v=xn9ef5pod18)
 
-#TODO: ### **Finish All these tasks by Friday **
+#TODO: 
+
+### ** YRALLE **
 - [X] Login routes for Staff and Customer
 - [X] Sign up page (Only for Customer)
-- [X] Personanlized Profile Pages for Staff and Customer
+- [X] Personanlized Profile Pages  Customer
 - [X] Loan Request Page using Async 
-- [X] Session-Authenticator(?) for proper page routing
-- [ ] Payments Cashflow generation
-- [ ] Customer payments feature
-- [ ] Basic Reports (Customer)
-- [ ] Basic Reports (Staff)
-- [ ] Basic Workflow Routing for approval 
+- [ ] Session-Authenticatorfor proper page routing
+- [ ] Customer Dashboard 
 - [X] Edit Profile page (Customer)
-- [ ] Edit Profile page (Staff)
+- [X] Edit Profile page (Staff)
+
+### ** SPENCER **
+- [ ] Customer Loan Request
+- [ ] Payments Insert and Update
+- [ ] Loan Table Update after payment
+
+### ** JUNHUI **
+- [ ] Basic Workflow Routing for approval 
+- [ ] Admin Dashboard (UI)
+- [ ] Personanlized Profile Pages Staff (UI)
+
+### ** LETITA **
+- [X] Home Page
+- [ ] DO UI FOR JUNHUI
+- [ ] ER Diagram
+
+### ** JAYDE **
+- [ ] Basic Reports (Staff)
+- [ ] Final Report (PDF)
 
 
+
+
+- [ ] Error Handling for Database Queries
 ## Setting up of Database
 
 
