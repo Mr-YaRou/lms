@@ -3,6 +3,7 @@
  */
 const express = require('express')
 
+
 const router = express.Router();
 
 const database = require('../DataBase Project/database');
@@ -19,7 +20,10 @@ const queryAsync = promisify(database.query).bind(database);
 var Login_Validate = 'SELECT * FROM lms.customer WHERE username = ? AND password = ?';
 var customer_sign_up = 'CALL lms.Insert_Customers(?,?,?)';
 var session_token = 'SELECT cus_id from lms.customer WHERE username = ?';
-var customer_update = 'CALL lms.Update_Customer_Details(?,?,?,?,?,?,?,?,?,?,?)';
+var customer_update = 'CALL lms.Update_Customer_Details(?,?,?,?,?,?,?,?,?,?)';
+var customer_details = 'SELECT * FROM lms.customer where cus_id = ? ;';
+
+var customer_retrieve_loan = 'call lms.loan_extract(?)';
 
 //TODO - create proper home page 
 router.get('/', (request, response) => {
@@ -71,9 +75,13 @@ router.post('/reg', async function (request, response) {
     }
 });
 
-router.get('/profile/edit', async (request, response) => {
-    console.log(request.session.token);
-    response.render('editprofile');
+router.get('/profile/edit', (request, response) => {
+
+    if (request.session.loggedin) {
+        response.render('editprofile');
+    } else {
+        response.send('Please login to view this page!');
+    }
 
 });
 
@@ -87,7 +95,6 @@ router.post('/auth', function (request, response) {
     var username = request.body.username;
     var password = request.body.password;
     var role = request.body.radio;
-
 
     var token;
     database.query(session_token, username, function (_error, results, fields) {
@@ -118,38 +125,58 @@ router.post('/auth', function (request, response) {
  * TODO -> Edit Profile page and Profile Dashboard 
  */
 router.get('/profile', async function (request, response) {
-    if (request.session.loggedin) {
-        //response.send('Welcome back, ' + request.session.username + '!');
-        var testsql = 'select * from myapp.book;';
-        let entries = await queryAsync(testsql);
 
-        var token = request.session.token
-        console.log(token);
-        response.render('profile', {
-            user: request.session.username,
-            varialbe: request.session.password,
-            entries: entries,
-            token: token
-        });
+    if (request.session.loggedin) {
+        // Test
+        // Test End
+        // Contains Account ID Details
+        var token = request.session.token;
+
+        try {
+            // await query for Customer Details to be sent toProfile page
+            let user_data = await queryAsync(customer_details, [token]);
+            let loan_data = await queryAsync(customer_retrieve_loan, [token]);
+
+            console.log(loan_data[0]);
+
+            response.render('profile', {
+                customer: user_data,
+                loans: loan_data
+            });
+        } catch (error) {
+            console.log('SQL error', error);
+            response.status(500).send('Something went wrong');
+        }
     } else {
         response.send('Please login to view this page!');
     }
-    response.end();
+});
+
+router.get('/logout', function (req, res, next) {
+    if (req.session) {
+        // delete session object
+        req.session.destroy(function (err) {
+            if (err) {
+                return next(err);
+            } else {
+                return res.redirect('/');
+            }
+        });
+    }
 });
 
 router.post('/profile/update', function (request, response) {
 
+    var cus_id = request.session.token
     var first_name = request.body.first_name;
     var last_name = request.body.last_name;
     var address = request.body.address;
     var postal_code = request.body.postal_code;
     var handphone = request.body.handphone;
-    var dob = request.body.dob;
+    var dob = request.body.date;
     var company = request.body.company;
     var job_title = request.body.job_title;
     var annual_salary = request.body.annual_salary;
-    var cus_id = request.session.token
-
 
     var obj = {
         cus_id,
@@ -158,18 +185,28 @@ router.post('/profile/update', function (request, response) {
         address,
         postal_code,
         handphone,
+        dob,
         company,
-        job_title,
-        annual_salary
+        annual_salary,
+        job_title
     };
 
-    console.log(obj);
+    if (obj) {
+        database.query(customer_update, [cus_id, first_name, last_name, address, postal_code, handphone, dob, company, annual_salary, job_title], function (_error, results, fields) {
 
-    database.query(customer_update, [cus_id, first_name, last_name, address, postal_code, handphone, company,
-        job_title, annual_salary], function (_error, results, fields) {
-            if (_error)
-                console.log("Something Unexpected Happen");
+            if (_error) {
+                console.log(_error);
+                response.redirect('/');
+                response.end();
+            }
+
+            response.redirect('/profile');
+
         });
+    } else {
+        response.send('There is a Query Error!'); // Can be a redirect 
+        response.end();
+    }
 
 });
 
