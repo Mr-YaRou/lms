@@ -6,7 +6,7 @@ const express = require('express')
 
 const router = express.Router();
 
-const database = require('../DataBase Project/database');
+const database = require('./database');
 
 const {
     promisify,
