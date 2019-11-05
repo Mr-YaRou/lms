@@ -6,7 +6,7 @@ const path = require('path');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
-const router = require('../DataBase Project/routes');
+const router = require('./routes');
 
 const app = express();
 
