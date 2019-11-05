@@ -22,7 +22,7 @@ For more visual guide, visit this [link](https://www.youtube.com/watch?v=xn9ef5p
 - [X] Personanlized Profile Pages  Customer
 - [X] Loan Request Page using Async 
 - [ ] Session-Authenticatorfor proper page routing
-- [ ] Customer Dashboard 
+- [ ] Customer Dashboard (In Progress) 
 - [X] Edit Profile page (Customer)
 - [X] Edit Profile page (Staff)
 
@@ -32,7 +32,7 @@ For more visual guide, visit this [link](https://www.youtube.com/watch?v=xn9ef5p
 - [ ] Loan Table Update after payment
 
 ### ** JUNHUI **
-- [ ] Basic Workflow Routing for approval 
+- [X] Basic Workflow Routing for approval 
 - [ ] Admin Dashboard (UI)
 - [ ] Personanlized Profile Pages Staff (UI)
 
