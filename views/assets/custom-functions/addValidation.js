@@ -12,13 +12,5 @@ function addValidation(elemId) {
     else {
         removeValidation(elemId);
     }
-
-    console.log(`UPDATE_${fileFunctName}: Succesful execution`);
-}
-
-function changeClass(elemId) {
-    const fileFunctName = "addValidation.js_changeClass";
-    console.log(`UPDATE_${fileFunctName}: Executing function`);
-    document.getElementById(elemId).classList.add('is-invalid');
     console.log(`UPDATE_${fileFunctName}: Succesful execution`);
 }

@@ -8,6 +8,7 @@ function checkAmount(amtId, submitId) {
     else {
         const min_amt = document.getElementById('textMin').value;
         const max_amt = document.getElementById('textMax').value;
+        changeClass(amtId);
         updateValidationMessage(amtId, `Please input a value between ${min_amt} and ${max_amt}`);
         document.getElementById(submitId).disabled = true;
     }

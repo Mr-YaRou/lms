@@ -85,9 +85,25 @@ router.get('/profile/edit', (request, response) => {
 
 });
 
+// Login Page
 router.get('/login', (req, res) => {
     res.render('login');
 });
+
+
+//Loan Application
+router.get('/loanapplication', (req, res) => {
+    const loanTypeQuery = 'SELECT loan_type_id, name, min_amount, max_amount, duration, interest, department_id FROM loan_type'
+    database.query(loanTypeQuery, function(_error, results, fields) {
+        if(_error) throw _error;
+        res.render('loanApplication.ejs', {
+            loanTypes: results,
+            loanTypesStr: JSON.stringify(results)
+        });
+    });
+});
+
+//
 
 // User Log in Authentication 
 // TODO - Design Seperate Routing Paths for Customer and Staff

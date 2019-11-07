@@ -4,6 +4,7 @@ function isAmountCorrect(elemId) {
     const loanAmt = document.getElementById(elemId).value;
     const min_amt = document.getElementById('textMin').value;
     const max_amt = document.getElementById('textMax').value;
-    console.log(`UPDATE_${fileFunctName}: Succesful execution`);
-    return loanAmt >= min_amt && loanAmt <= max_amt;
+    const result = (loanAmt >= min_amt && loanAmt <= max_amt);
+    console.log(`UPDATE_${fileFunctName}: Succesful execution: ${result}`);
+    return result
 }
