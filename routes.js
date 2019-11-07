@@ -3,7 +3,6 @@
  */
 const express = require('express')
 
-
 const router = express.Router();
 
 const database = require('./database');
@@ -22,6 +21,10 @@ var customer_sign_up = 'CALL lms.Insert_Customers(?,?,?)';
 var session_token = 'SELECT cus_id from lms.customer WHERE username = ?';
 var customer_update = 'CALL lms.Update_Customer_Details(?,?,?,?,?,?,?,?,?,?)';
 var customer_details = 'SELECT * FROM lms.customer where cus_id = ? ;';
+var session_token_staff = 'select staff_id from lms.staff where username = ? and password = ?'
+var Login_Validate_staff = 'SELECT * FROM lms.staff WHERE username = ? AND password = ?';
+var staff_department_validate = 'select * from lms.access where (select staff_id from lms.staff where staff_id = ?) AND account_id = ?';
+
 
 var customer_retrieve_loan = 'call lms.loan_extract(?)';
 
@@ -106,34 +109,54 @@ router.get('/loanapplication', (req, res) => {
 //
 
 // User Log in Authentication 
-// TODO - Design Seperate Routing Paths for Customer and Staff
 router.post('/auth', function (request, response) {
     var username = request.body.username;
     var password = request.body.password;
     var role = request.body.radio;
 
     var token;
-    database.query(session_token, username, function (_error, results, fields) {
-        token = results[0].cus_id;
-    });
-    if (username && password) {
+
+    if (username && password && role == 'CUSTOMER') {
         database.query(Login_Validate, [username, password], function (_error, results, fields) {
             if (results.length > 0) {
-                console.log('User %s has Logged in', username);
-                request.session.loggedin = true;
-                request.session.username = username;
-                request.session.token = token;
-                response.redirect('/profile');
+                console.log('CUSTOMER ROUTE');
+                database.query(session_token, username, function (_error, results, fields) {
+                    token = results[0].cus_id;
+                    console.log('Customer %s has Logged in', username);
+                    request.session.loggedin = true;
+                    request.session.username = username;
+                    request.session.token = token;
+                    console.log(request.session);
+                    response.redirect('/profile');
+                });
             } else {
                 response.send('Incorrect Username and/or Password!'); // Can be a redictect 
             }
-            response.end();
+
         });
+    } else if (username && password && role == 'STAFF') {
+        database.query(Login_Validate_staff, [username, password], function (_error, results, fields) {
+            if (results.length > 0) {
+
+                console.log('STAFF ROUTE');
+                database.query(session_token_staff, [username, password], function (_error, results, fields) {
+                    token = results[0].staff_id;
+                    console.log('Staff %s has Logged in', username);
+                    request.session.Staffloggedin = true;
+                    request.session.username = username;
+                    request.session.token = token;
+                    console.log(request.session);
+                    response.redirect('/staff');
+                });
+            }
+        })
     } else {
-        response.send('Please enter Username and Password!'); // Can be a redirect 
-        response.end();
+        response.send('Incorrect Username and/or Password!'); // Can be a redictect 
     }
 });
+
+
+
 
 /**
  *  Successful Log In - Profile Page 
@@ -153,8 +176,6 @@ router.get('/profile', async function (request, response) {
             let user_data = await queryAsync(customer_details, [token]);
             let loan_data = await queryAsync(customer_retrieve_loan, [token]);
 
-            console.log(loan_data[0]);
-
             response.render('profile', {
                 customer: user_data,
                 loans: loan_data
@@ -171,6 +192,7 @@ router.get('/profile', async function (request, response) {
 router.get('/logout', function (req, res, next) {
     if (req.session) {
         // delete session object
+        console.log("User ? has logged out", req.session.username);
         req.session.destroy(function (err) {
             if (err) {
                 return next(err);
@@ -260,9 +282,6 @@ router.get('/loandetails/:id', function (req, res) {
 
     var loanID = req.params.id;
 
-    console.log('Loan ID sent is : ', loanID);
-
-    res.send('Sucess Send');
 })
 
 /**
