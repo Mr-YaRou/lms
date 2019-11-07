@@ -101,3 +101,61 @@ VIEW `lms`.`customer_paid_loans` AS
         ((`lms`.`loan`.`loan_type_id` = `lms`.`loan_type`.`loan_type_id`)
             AND (`lms`.`loan`.`loan_id` = `lms`.`payment`.`loan_id`))
     GROUP BY `lms`.`loan`.`loan_id`
+
+    CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_loan`(
+   loanTypeId int(8),
+   accountId int(8),
+   loanAmount double unsigned,
+   dateToday date
+)
+BEGIN
+    SET @last_id = (
+        SELECT loan_id
+       FROM lms.loan
+       ORDER BY loan_id DESC
+       LIMIT 1
+    ) + 1;
+ 
+   SET @department_id = (
+       SELECT department_id
+       FROM lms.loan_type
+       WHERE loan_type_id = loanTypeId
+   );
+ 
+   SET @approver_id = (
+       SELECT staff.staff_id
+       FROM lms.staff staff
+           LEFT OUTER JOIN lms.loan AS loan ON loan.approver_id = staff.staff_id
+       WHERE staff.staff_id IN (
+           SELECT access.account_id
+           FROM lms.access access
+           WHERE access.accesstype_id IN (
+               SELECT accessType.access_id
+               FROM lms.access_type accessType
+               WHERE accessType.department_id = @department_id AND accessType.approval_limit >= loanAmount
+           )
+       )
+       GROUP BY staff.staff_id
+       ORDER BY COUNT(loan.approver_id) ASC
+       LIMIT 1
+   );
+ 
+    INSERT INTO `lms`.`loan`(
+       `loan_id`,
+       `loan_type_id`,
+       `account_id`,
+       `loan_amount`,
+       `status`,
+       `approver_id`,
+       `date_of_application`
+   )
+    VALUES (
+       @last_id,
+       loanTypeId,
+       accountId,
+       loanAmount,
+       "new",
+       @approver_id,
+       dateToday
+    );
+END
