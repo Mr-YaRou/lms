@@ -1,4 +1,3 @@
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Insert_Customers`(
 username varchar(256),
 password varchar(256),
@@ -102,7 +101,8 @@ VIEW `lms`.`customer_paid_loans` AS
             AND (`lms`.`loan`.`loan_id` = `lms`.`payment`.`loan_id`))
     GROUP BY `lms`.`loan`.`loan_id`
 
-    CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_loan`(
+/* Loan Application */
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_loan`(
    loanTypeId int(8),
    accountId int(8),
    loanAmount double unsigned,
@@ -159,3 +159,4 @@ BEGIN
        dateToday
     );
 END
+

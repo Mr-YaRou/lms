@@ -24,9 +24,7 @@ var customer_details = 'SELECT * FROM lms.customer where cus_id = ? ;';
 var session_token_staff = 'select staff_id from lms.staff where username = ? and password = ?'
 var Login_Validate_staff = 'SELECT * FROM lms.staff WHERE username = ? AND password = ?';
 var staff_department_validate = 'select * from lms.access where (select staff_id from lms.staff where staff_id = ?) AND account_id = ?';
-
-
-var customer_retrieve_loan = 'call lms.loan_extract(?)';
+var customer_retrieve_loan = 'SELECT loan.loan_id, loanType.name, loan.status,  loan.outstanding_amount, SUM(payment.payment_amount) AS total_paid, loanType.interest FROM lms.loan loan LEFT OUTER JOIN lms.payment payment ON payment.loan_id = loan.loan_id INNER JOIN lms.loan_type loanType ON loanType.loan_type_id = loan.loan_type_id WHERE loan.account_id = ? GROUP BY loan.loan_id';
 
 //TODO - create proper home page 
 router.get('/', (request, response) => {
@@ -93,19 +91,42 @@ router.get('/login', (req, res) => {
     res.render('login');
 });
 
-
 //Loan Application
 router.get('/loanapplication', (req, res) => {
-    const loanTypeQuery = 'SELECT loan_type_id, name, min_amount, max_amount, duration, interest, department_id FROM loan_type'
-    database.query(loanTypeQuery, function(_error, results, fields) {
-        if(_error) throw _error;
-        res.render('loanApplication.ejs', {
-            loanTypes: results,
-            loanTypesStr: JSON.stringify(results)
+    if(req.session.loggedin) {
+        const loanTypeQuery = 'SELECT loan_type_id, name, min_amount, max_amount, duration, interest, department_id FROM loan_type'
+        database.query(loanTypeQuery, function(_error, results, fields) {
+            if(_error) throw _error;
+            res.render('loanApplication.ejs', {
+                loanTypes: results,
+                loanTypesStr: JSON.stringify(results)
+            });
         });
-    });
+    }
+    else {
+        console.log('Loan Application: User not logged in');
+        res.redirect('/login');
+    }
 });
 
+router.post('/loanapplication/submit', (req, res) => {
+    //if(request.session.loggedin) {
+        const submitLoanQuery = 'CALL lms.insert_loan(?,?,?,?)';
+        const loanTypeId = req.body.selectLoan;
+        const accountId = req.session.token;
+        const loanAmount = req.session.textLoanAmount;
+        const today = new Date();
+        const dateToday = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        database.query(submitLoanQuery, [loanTypeId, accountId, loanAmount, dateToday], function (_error, results, fields) {
+            if(_error) {
+                console.log('Loan Application: Loan submission failed');
+                req.redirect('/loanapplication');
+            }
+            console.log('Loan Application: Loan submission successful');
+            req.redirect('/profile');
+        });
+
+});
 //
 
 // User Log in Authentication 
@@ -164,7 +185,6 @@ router.post('/auth', function (request, response) {
  * TODO -> Edit Profile page and Profile Dashboard 
  */
 router.get('/profile', async function (request, response) {
-
     if (request.session.loggedin) {
         // Test
         // Test End
@@ -175,17 +195,18 @@ router.get('/profile', async function (request, response) {
             // await query for Customer Details to be sent toProfile page
             let user_data = await queryAsync(customer_details, [token]);
             let loan_data = await queryAsync(customer_retrieve_loan, [token]);
-
+            console.log(loan_data);
             response.render('profile', {
                 customer: user_data,
-                loans: loan_data
+                loanStr: JSON.stringify(loan_data)
             });
         } catch (error) {
             console.log('SQL error', error);
             response.status(500).send('Something went wrong');
         }
     } else {
-        response.send('Please login to view this page!');
+        console.log('Profile: User not logged in');
+        response.redirect('/login');
     }
 });
 
