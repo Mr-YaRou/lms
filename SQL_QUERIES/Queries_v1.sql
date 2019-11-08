@@ -105,7 +105,7 @@ VIEW `lms`.`customer_paid_loans` AS
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_loan`(
    loanTypeId int(8),
    accountId int(8),
-   loanAmount double unsigned,
+   loanAmount double,
    dateToday date
 )
 BEGIN

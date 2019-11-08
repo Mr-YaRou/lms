@@ -24,7 +24,7 @@ var customer_details = 'SELECT * FROM lms.customer where cus_id = ? ;';
 var session_token_staff = 'select staff_id from lms.staff where username = ? and password = ?'
 var Login_Validate_staff = 'SELECT * FROM lms.staff WHERE username = ? AND password = ?';
 var staff_department_validate = 'select * from lms.access where (select staff_id from lms.staff where staff_id = ?) AND account_id = ?';
-var customer_retrieve_loan = 'SELECT loan.loan_id, loanType.name, loan.status,  loan.outstanding_amount, SUM(payment.payment_amount) AS total_paid, loanType.interest FROM lms.loan loan LEFT OUTER JOIN lms.payment payment ON payment.loan_id = loan.loan_id INNER JOIN lms.loan_type loanType ON loanType.loan_type_id = loan.loan_type_id WHERE loan.account_id = ? GROUP BY loan.loan_id';
+var customer_retrieve_loan = 'SELECT loan.loan_id, loanType.name, loan.status, loan.loan_amount, loan.outstanding_amount, SUM(payment.payment_amount) AS total_paid, loanType.interest FROM lms.loan loan LEFT OUTER JOIN lms.payment payment ON payment.loan_id = loan.loan_id INNER JOIN lms.loan_type loanType ON loanType.loan_type_id = loan.loan_type_id WHERE loan.account_id = ? GROUP BY loan.loan_id';
 
 //TODO - create proper home page 
 router.get('/', (request, response) => {
@@ -110,24 +110,43 @@ router.get('/loanapplication', (req, res) => {
 });
 
 router.post('/loanapplication/submit', (req, res) => {
-    //if(request.session.loggedin) {
+    if(req.session.loggedin) {
         const submitLoanQuery = 'CALL lms.insert_loan(?,?,?,?)';
-        const loanTypeId = req.body.selectLoan;
-        const accountId = req.session.token;
-        const loanAmount = req.session.textLoanAmount;
-        const today = new Date();
-        const dateToday = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var loanTypeId = req.body.loanType;
+        var accountId = req.session.token;
+        var loanAmount = req.body.loanAmount;
+        var today = new Date();
+        var dateToday = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
         database.query(submitLoanQuery, [loanTypeId, accountId, loanAmount, dateToday], function (_error, results, fields) {
             if(_error) {
                 console.log('Loan Application: Loan submission failed');
-                req.redirect('/loanapplication');
+                res.redirect('/loanapplication');
+                throw _error;
             }
+            console.log([loanTypeId, accountId, loanAmount, dateToday]);
             console.log('Loan Application: Loan submission successful');
-            req.redirect('/profile');
+            res.redirect('/loanapplication/success');
         });
-
+    }
+    else {
+        console.log('Loan Application/Submit Loan: User not logged in');
+        res.redirect('/login');
+    }
 });
 //
+
+//Successful Loan Submission
+
+router.get('/loanapplication/success', (req, res) => {
+    if(req.session.loggedin) {
+            res.render('loanSubmission.ejs', {
+            });
+    }
+    else {
+        console.log('Loan Application: User not logged in');
+        res.redirect('/login');
+    }
+});
 
 // User Log in Authentication 
 router.post('/auth', function (request, response) {
@@ -186,19 +205,31 @@ router.post('/auth', function (request, response) {
  */
 router.get('/profile', async function (request, response) {
     if (request.session.loggedin) {
-        // Test
-        // Test End
-        // Contains Account ID Details
         var token = request.session.token;
 
         try {
             // await query for Customer Details to be sent toProfile page
             let user_data = await queryAsync(customer_details, [token]);
             let loan_data = await queryAsync(customer_retrieve_loan, [token]);
-            console.log(loan_data);
+            var loanStr = JSON.stringify(loan_data);
+            loanStr = loanStr.replace(/&#34;/g, "\"");
+            var tableContent = "";
+            var loanJSONAttr = ['loan_id', 'name', 'status', 'loan_amount', 'outstanding_amount', 'total_paid', 'interest'];
+            //var table = document.getElementById('tableLoansOverview').getElementsByTagName('tbody')[0];
+            for (var i = 0; i < Object.keys(loan_data).length; ++i) {
+                tableContent += '<tr>';
+                for (var j = 0; j < Object.keys(loanJSONAttr).length; ++j) {
+                    const attr = loanJSONAttr[j];
+                    tableContent += '<td>' + loan_data[i][attr] + '</td>';
+                }
+                tableContent += '</tr>'
+            };
+            //console.log(tableContent);
+            tableContent = tableContent.replace(/null/g, '0');
             response.render('profile', {
                 customer: user_data,
-                loanStr: JSON.stringify(loan_data)
+                loanStr: JSON.stringify(loan_data),
+                loanHTML: tableContent
             });
         } catch (error) {
             console.log('SQL error', error);

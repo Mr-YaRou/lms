@@ -226,19 +226,7 @@
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="page-header">
-                            <h2 class="pageheader-title">Loan Application </h2>
-                             <!--
-                            <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a>
-                                        </li>
-                                        <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Pages</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">Blank Pageheader</li>
-                                    </ol>
-                                </nav>
-                            </div>
-                             -->
+                            <h2 class="pageheader-title">Success! </h2>
                         </div>
                     </div>
                 </div>
@@ -246,103 +234,23 @@
                 <!-- ============================================================== -->
                 <!-- end pageheader -->
                 <!-- ============================================================== -->
+
+                <!-- ============================================================== -->
+                <!-- body -->
+                <!-- ============================================================== -->
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                        <h3 class="text-left">
-                        <!-- ============================================================== -->
-                        <!-- validation types -->
-                        <!-- ============================================================== -->                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <form id="validationform" data-parsley-validate="" novalidate="" action="/loanapplication/submit" method="post">
-                                        <!--  Dropdown list -->
-                                        <div class="form-group row">
-                                            <label id="dropdown_loan" class="col-12 col-sm-3 col-form-label text-sm-right">Loan</label>
-                                            <div class="col-12 col-sm-8 col-lg-6">
-                                                <script>
-                                                    var elemLoanTypeMap = new Map([
-                                                        ['textMin', 'min_amount'],
-                                                        ['textMax', 'max_amount'],
-                                                        ['textDuration', 'duration'],
-                                                        ['textInterest', 'interest']
-                                                    ]);
-                                                    var elemList = [
-                                                        "textMin",
-                                                        "textMax",
-                                                        "textDuration",
-                                                        "textInterest"
-                                                    ];
-                                                    var loanTypesJs = "<%= loanTypesStr %>";
-                                                    loanTypesJs = loanTypesJs.replace(/&#34;/g, "\"")
-                                                </script>
-                                                <select id="selectLoan" name="loanType" class="selectpicker" data-live-search="true" data-width="100%" title="Select a loan" value="Select a loan" onChange="updateElements(this.value, elemList, loanTypesJs, elemLoanTypeMap)">
-                                                    <% loanTypes.forEach(function(loanType) { %>
-                                                        <option value="<%= loanType.loan_type_id%>"><%= loanType.name %></option><br>
-                                                    <% }); %>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label class="col-12 col-sm-3 col-form-label text-sm-right">Min. Amount ($)</label>
-                                            <div class="col-12 col-sm-8 col-lg-6">
-                                            <input id="textMin" type="text" disabled="disabled" class="form-control" value="">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label class="col-12 col-sm-3 col-form-label text-sm-right">Max. Amount ($)</label>
-                                            <div class="col-12 col-sm-8 col-lg-6">
-                                                <input id="textMax" type="text" disabled="disabled" class="form-control" value="">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label class="col-12 col-sm-3 col-form-label text-sm-right">Payment Duration (Months)</label>
-                                            <div class="col-12 col-sm-8 col-lg-6">
-                                                <input id="textDuration" type="text" disabled="disabled" class="form-control" value="">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label class="col-12 col-sm-3 col-form-label text-sm-right">Monthly Interest (%)</label>
-                                            <div class="col-12 col-sm-8 col-lg-6">
-                                                <input id="textInterest" type="text" disabled="disabled" class="form-control" value="">
-                                            </div>
-                                        </div>
-    
-                                        <div class="form-group row">
-                                        </div>
-
-                                        
-                                        <div class="form-group row">
-                                            <label class="col-12 col-sm-3 col-form-label text-sm-right">Amount</label>
-                                            <div class="col-12 col-sm-8 col-lg-6">
-                                                <input id="textLoanAmount" name="loanAmount" type="text" required="" data-parsley-type="number" class="form-control" onclick="addValidation('textLoanAmount')" onchange="checkAmount('textLoanAmount', 'submitLoan')">
-                                                <div id="textLoanAmount_validation" class="invalid-feedback">
-                                                        Please select a Loan
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="form-group row text-right">
-                                            <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
-                                                <button id="submitLoan" type="submit" class="btn btn-space btn-primary" disabled>Apply now!</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                        <div class="card" id="align">
+                            <div class="card-body border-top">
+                                <h3 class="text-center">Loan Submission Success!</h3>
+                                <p class="text-center">Our Loan Managers will reach out to you shortly!</p>
                             </div>
                         </div>
-                        <!-- ============================================================== -->
-                        <!-- end valifation types -->
-                        <!-- ============================================================== -->
-                        </h3>
                     </div>
                 </div>
             </div>
             <!-- ============================================================== -->
-            <!-- footer -->
+            <!-- end body -->
             <!-- ============================================================== -->
             <div class="footer">
                 <div class="container-fluid">
@@ -372,13 +280,6 @@
     <!-- end main wrapper -->
     <!-- ============================================================== -->
     <!-- Optional JavaScript -->
-    <script src="/assets/custom-functions/updateElements.js"></script>
-    <script src="/assets/custom-functions/isAmountCorrect.js"></script>
-    <script src="/assets/custom-functions/changeClass.js"></script>
-    <script src="/assets/custom-functions/removeValidation.js"></script>
-    <script src="/assets/custom-functions/updateValidationMessage.js"></script>
-    <script src="/assets/custom-functions/addValidation.js"></script>
-    <script src="/assets/custom-functions/checkAmount.js"></script>
     <script src="/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
     <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="/assets/vendor/slimscroll/jquery.slimscroll.js"></script>
