@@ -7,8 +7,8 @@ const session = require('express-session');
 
 const adminAddPage = require('./adding');
 const staffPage = require('./staffPage')
-const {addCustomerPage, addCustomer} = require('./adding');
-const {adminPage, viewTable, editTable, editPage} = require('./admin');
+//const {addCustomerPage, addCustomer} = require('./adding');
+//const {adminPage, viewTable, editTable, editPage} = require('./admin');
 
 const {
   promisify,
@@ -23,18 +23,22 @@ app.use(session({
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(express.static(__dirname + '/views/'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+
 app.use('/admin',adminAddPage);
-app.use('/staff',staffPage)
+app.use('/staff',staffPage);
+
 
 //global.mydatabase = mydatabase;
 
 
 
 app.get('/', (req, res) => {
-  // Education staff: 30000004, admin: 30000025
-  req.session.sta_id = '30000004';
+  // Education staff: 30000004, admin: 30000025, double access: 30000024, 
+  req.session.sta_id = '30000024';
   req.session.admin = true;
   req.session.staff = true;
   req.session.loggedin = true;
@@ -53,10 +57,10 @@ app.get('/', (req, res) => {
 });
 //app.get('/addCustomer',addCustomerPage);
 //app.post('/addCustomer',addCustomer);
-app.get('/admin',adminPage);
-app.get('/admin/view',viewTable);
-app.get('/edit',editPage);
-app.post('/edit',editTable);
+app.get('/demo', (req, res) => {
+  res.render('demoProfile', {
+  });
+});
 
 var server = app.listen(80, function () {
    var host = server.address().address
